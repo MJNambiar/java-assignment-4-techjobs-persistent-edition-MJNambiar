@@ -10,7 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -50,9 +50,11 @@ public class HomeController {
         } else {
             Optional optEmployer = employerRepository.findById(employerId);
             if (optEmployer.isPresent()) {
-                Employer employer = (Employer) optEmployer.get();
-                model.addAttribute("employer", employer);
+                Employer employer = new (Employer) employer.getJobs(employerId);
+                newJob.setEmployer(employer);
+                model.addAttribute("job", newJob);
             }
+            //need to create a new job object from the Add Jobs form
             return "redirect:";
         }
     }
