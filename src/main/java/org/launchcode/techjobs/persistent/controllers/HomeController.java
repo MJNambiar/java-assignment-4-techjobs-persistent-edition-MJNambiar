@@ -3,6 +3,7 @@ package org.launchcode.techjobs.persistent.controllers;
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
+import org.launchcode.techjobs.persistent.models.data.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -21,6 +23,10 @@ public class HomeController {
 
     @Autowired
     private EmployerRepository employerRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
+    //may not need this
 
     @RequestMapping("")
     public String index(Model model) {
@@ -39,10 +45,9 @@ public class HomeController {
     }
 
     @PostMapping("add")
-    public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                                       Errors errors, Model model, @RequestParam int employerId) {
-//        public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-//                Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
+        public String processAddJobForm(@ModelAttribute @Valid Job newJob,
+                Errors errors, Model model, @RequestParam int employerId){
+//            , @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
@@ -50,11 +55,14 @@ public class HomeController {
         } else {
             Optional optEmployer = employerRepository.findById(employerId);
             if (optEmployer.isPresent()) {
-                Employer employer = new (Employer) employer.getJobs(employerId);
+                Employer employer = (Employer) optEmployer.get();
+                model.addAttribute("employer", employer);
                 newJob.setEmployer(employer);
-                model.addAttribute("job", newJob);
             }
+            jobRepository.save(newJob);
+            model.addAttribute("job", newJob);
             //need to create a new job object from the Add Jobs form
+            //how do you get the new job name in as "job.name" and how to validate job object
             return "redirect:";
         }
     }

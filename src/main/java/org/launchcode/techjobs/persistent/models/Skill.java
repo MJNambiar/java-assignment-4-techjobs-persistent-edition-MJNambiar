@@ -1,11 +1,15 @@
 package org.launchcode.techjobs.persistent.models;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Skill extends AbstractEntity {
 
     private String description;
+
+//    @ManyToMany(mappedBy = "skills")
+//    private Job jobs;
 
     public Skill(String description) {
         this.description = description;
