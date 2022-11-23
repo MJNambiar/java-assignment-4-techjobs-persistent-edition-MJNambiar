@@ -16,3 +16,9 @@ TABLE
 job;
 
 -- Part 4: Test it with SQL
+SELECT skill.name
+FROM skill
+LEFT INNER JOIN job ON (skill.id = job.skills)
+WHERE job.id IS NOT NULL
+ORDER BY skill.name ASC;
+//need to create join table instead?

@@ -2,8 +2,10 @@ package org.launchcode.techjobs.persistent.controllers;
 
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Job;
+import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.data.EmployerRepository;
 import org.launchcode.techjobs.persistent.models.data.JobRepository;
+import org.launchcode.techjobs.persistent.models.data.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,9 @@ public class HomeController {
     private JobRepository jobRepository;
     //may not need this
 
+    @Autowired
+    private SkillRepository skillRepository;
+
     @RequestMapping("")
     public String index(Model model) {
 
@@ -46,23 +51,29 @@ public class HomeController {
 
     @PostMapping("add")
         public String processAddJobForm(@ModelAttribute @Valid Job newJob,
-                Errors errors, Model model, @RequestParam int employerId){
-//            , @RequestParam List<Integer> skills) {
+                Errors errors, Model model, @RequestParam int employerId, @RequestParam List<Integer> skills) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Job");
             return "add";
         } else {
             Optional optEmployer = employerRepository.findById(employerId);
-            if (optEmployer.isPresent()) {
-                Employer employer = (Employer) optEmployer.get();
-                model.addAttribute("employer", employer);
-                newJob.setEmployer(employer);
-            }
+            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+
+            model.addAttribute("skills", skillObjs);
+            newJob.setSkills(skillObjs);
+
+                if (optEmployer.isPresent()) {
+                    Employer employer = (Employer) optEmployer.get();
+                    model.addAttribute("employers", employer);
+                    newJob.setEmployer(employer);
+                }
             jobRepository.save(newJob);
             model.addAttribute("job", newJob);
             //need to create a new job object from the Add Jobs form
-            //how do you get the new job name in as "job.name" and how to validate job object
+            // how to validate job object
+            //how to check if valid job for skills and employer????
+            //try data transfer object since skills aren't showing up
             return "redirect:";
         }
     }
