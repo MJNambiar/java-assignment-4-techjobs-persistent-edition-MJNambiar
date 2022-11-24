@@ -40,5 +40,4 @@ public class Job extends AbstractEntity{
         this.skills = skills;
     }
 
-    //do i need this? otherwise test won't run b/c test requires a setSkills function. however, isn't this final so i don't think it needs a set skills???
 }

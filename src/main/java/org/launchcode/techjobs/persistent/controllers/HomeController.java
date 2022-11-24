@@ -71,10 +71,7 @@ public class HomeController {
                 }
             jobRepository.save(newJob);
             model.addAttribute("job", newJob);
-            //need to create a new job object from the Add Jobs form
-            // how to validate job object
-            //how to check if valid job for skills and employer????
-            //try data transfer object since skills aren't showing up
+
             return "redirect:";
         }
     }
